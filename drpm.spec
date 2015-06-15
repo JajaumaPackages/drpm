@@ -1,7 +1,7 @@
 %global _hardened_build 1
 
 Name:           drpm
-Version:        0.1.2
+Version:        0.1.3
 Release:        1%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 License:        LGPLv3+
@@ -12,6 +12,9 @@ BuildRequires:  rpm-devel
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  xz-devel
+BuildRequires:  cmake >= 2.8
+BuildRequires:  libcmocka-devel >= 1.0
+BuildRequires:  valgrind
 
 %package devel
 Summary:        C interface for the drpm library
@@ -28,18 +31,21 @@ The drpm-devel package provides a C interface (drpm.h) for the drpm library.
 %setup -q
 
 %build
-make %{?_smp_mflags} CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}"
+%cmake .
+make %{?_smp_mflags}
+
+%check
+make check %{?_smp_mflags}
 
 %install
-%make_install libdir=%{_libdir} includedir=%{_includedir}
+%make_install
 
 %post -p /sbin/ldconfig
 
 %postun -p /sbin/ldconfig
 
 %files
-%{_libdir}/libdrpm.so.0
-%{_libdir}/libdrpm.so.0.0.0
+%{_libdir}/libdrpm.so.*
 %license COPYING COPYING.LESSER
 
 %files devel
@@ -48,6 +54,16 @@ make %{?_smp_mflags} CFLAGS="%{optflags}" LDFLAGS="%{__global_ldflags}"
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Wed Mar 11 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-3
+- Added cmocka and valgrind package dependencies
+
+* Fri Mar 6 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-2
+- Added check section
+
+* Fri Feb 13 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-1
+- Bumped version to 0.1.3
+- Added CMake tool
+
 * Fri Dec 19 2014 Matej Chalk <mchalk@redhat.com> 0.1.2-4
 - Enabled hardened build
 
