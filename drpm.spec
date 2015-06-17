@@ -2,7 +2,7 @@
 
 Name:           drpm
 Version:        0.1.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 License:        LGPLv3+
 URL:            http://fedorahosted.org/%{name}
@@ -54,6 +54,9 @@ make check %{?_smp_mflags}
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.3-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
 * Wed Mar 11 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-3
 - Added cmocka and valgrind package dependencies
 
