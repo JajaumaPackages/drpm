@@ -2,7 +2,7 @@
 
 Name:           drpm
 Version:        0.1.3
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 License:        LGPLv3+
 URL:            http://fedorahosted.org/%{name}
@@ -14,7 +14,9 @@ BuildRequires:  bzip2-devel
 BuildRequires:  xz-devel
 BuildRequires:  cmake >= 2.8
 BuildRequires:  libcmocka-devel >= 1.0
+%ifarch x86_64 %{ix86} %{arm} ppc ppc32 %{power64} s390x aarch64 amd64 mips32 mips64
 BuildRequires:  valgrind
+%endif
 
 %package devel
 Summary:        C interface for the drpm library
@@ -34,11 +36,11 @@ The drpm-devel package provides a C interface (drpm.h) for the drpm library.
 %cmake .
 make %{?_smp_mflags}
 
-%check
-make check %{?_smp_mflags}
-
 %install
 %make_install
+
+%check
+make check %{?_smp_mflags}
 
 %post -p /sbin/ldconfig
 
@@ -54,8 +56,8 @@ make check %{?_smp_mflags}
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
-* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 0.1.3-2
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+* Fri Jun 19 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-4
+- Memory test only for architectures that have valgrind (#1232157)
 
 * Wed Mar 11 2015 Matej Chalk <mchalk@redhat.com> 0.1.3-3
 - Added cmocka and valgrind package dependencies
