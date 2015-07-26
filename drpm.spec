@@ -2,7 +2,7 @@
 
 Name:           drpm
 Version:        0.2.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 License:        LGPLv3+
 URL:            http://fedorahosted.org/%{name}
@@ -56,6 +56,9 @@ make check %{?_smp_mflags}
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Sun Jul 26 2015 Kevin Fenzi <kevin@scrye.com> 0.2.0-3
+- Rebuild for new librpm
+
 * Fri Jul 24 2015 Matej Chalk <mchalk@redhat.com> 0.2.0-2
 - Fixed bug in test suite
 
