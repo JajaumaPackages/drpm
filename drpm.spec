@@ -1,61 +1,77 @@
-%global _hardened_build 1
-
 Name:           drpm
-Version:        0.2.0
-Release:        4%{?dist}
+Version:        0.2.1
+Release:        1%{?dist}
 Summary:        A small library for fetching information from deltarpm packages
 License:        LGPLv3+
-URL:            http://fedorahosted.org/%{name}
-Source:         http://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.bz2
+URL:            https://fedorahosted.org/%{name}
+Source:         https://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.bz2
 
+BuildRequires:  cmake >= 2.8
+BuildRequires:  gcc
 BuildRequires:  rpm-devel
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  xz-devel
-BuildRequires:  cmake >= 2.8
 BuildRequires:  libcmocka-devel >= 1.0
-%ifarch x86_64 %{ix86} %{arm} ppc ppc32 %{power64} s390x aarch64 amd64 mips32 mips64
+BuildRequires:  openssl-devel
+%ifarch %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
 BuildRequires:  valgrind
 %endif
-
-%package devel
-Summary:        C interface for the drpm library
-Requires:       %{name}%{?_isa} = %{version}-%{release}
+BuildRequires:  doxygen
 
 %description
 The drpm package provides a small library allowing one to fetch
 various info from deltarpm packages.
 
+%package devel
+Summary:        C interface for the drpm library
+Requires:       %{name}%{?_isa} = %{version}-%{release}
+
 %description devel
 The drpm-devel package provides a C interface (drpm.h) for the drpm library.
 
 %prep
-%setup -q
+%autosetup
+mkdir build
 
 %build
-%cmake .
-make %{?_smp_mflags}
+pushd build
+  %cmake ..
+  %make_build
+  make doc
+popd
 
 %install
-%make_install
+pushd build
+  %make_install
+popd
 
 %check
-make check %{?_smp_mflags}
+pushd build
+  ctest -VV
+popd
 
 %post -p /sbin/ldconfig
-
 %postun -p /sbin/ldconfig
 
 %files
-%{_libdir}/libdrpm.so.*
 %license COPYING COPYING.LESSER
+%{_libdir}/lib%{name}.so.*
 
 %files devel
-%{_libdir}/libdrpm.so
-%{_includedir}/drpm.h
-%{_libdir}/pkgconfig/drpm.pc
+%doc build/doc/html/
+%{_libdir}/lib%{name}.so
+%{_includedir}/%{name}.h
+%{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
+* Tue Apr 12 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.2.1-1
+- Update to 0.2.1
+- Cleanup spec
+- Make build out-of-tree
+- Sync with valgrind arches
+- Build documentation
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.2.0-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
