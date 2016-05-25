@@ -1,27 +1,35 @@
 Name:           drpm
-Version:        0.2.1
-Release:        1%{?dist}
-Summary:        A small library for fetching information from deltarpm packages
-License:        LGPLv3+
+Version:        0.3.0
+Release:        3%{?dist}
+Summary:        A library for making, reading and applying deltarpm packages
+# the entire source code is LGPLv3+, except src/drpm_diff.c and src/drpm_search.c which are BSD
+License:        LGPLv3+ and BSD
 URL:            https://fedorahosted.org/%{name}
 Source:         https://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.bz2
 
 BuildRequires:  cmake >= 2.8
 BuildRequires:  gcc
+
 BuildRequires:  rpm-devel
+BuildRequires:  openssl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  xz-devel
+%if 0%{?suse_version}
+BuildRequires:  lzlib-devel
+%endif
+
+BuildRequires:  pkgconfig
+BuildRequires:  doxygen
+
 BuildRequires:  libcmocka-devel >= 1.0
-BuildRequires:  openssl-devel
 %ifarch %{ix86} x86_64 ppc ppc64 ppc64le s390x armv7hl aarch64
 BuildRequires:  valgrind
 %endif
-BuildRequires:  doxygen
 
 %description
-The drpm package provides a small library allowing one to fetch
-various info from deltarpm packages.
+The drpm package provides a library for making, reading and applying deltarpms,
+compatible with the original deltarpm packages.
 
 %package devel
 Summary:        C interface for the drpm library
@@ -36,27 +44,32 @@ mkdir build
 
 %build
 pushd build
-  %cmake ..
-  %make_build
-  make doc
+%if 0%{?suse_version}
+%cmake -DHAVE_LZLIB_DEVEL:BOOL=ON ..
+%else
+%cmake ..
+%endif
+%make_build
+make doc
 popd
 
 %install
 pushd build
-  %make_install
+%make_install
 popd
 
 %check
 pushd build
-  ctest -VV
+ctest -VV
 popd
 
 %post -p /sbin/ldconfig
+
 %postun -p /sbin/ldconfig
 
 %files
-%license COPYING COPYING.LESSER
 %{_libdir}/lib%{name}.so.*
+%license COPYING COPYING.LESSER LICENSE.BSD
 
 %files devel
 %doc build/doc/html/
@@ -65,18 +78,21 @@ popd
 %{_libdir}/pkgconfig/%{name}.pc
 
 %changelog
-* Tue Apr 12 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.2.1-1
-- Update to 0.2.1
+* Tue May 3 2016 Matej Chalk <mchalk@redhat.com> 0.3.0-3
+- Now contains makedeltarpm and applydeltarpm functionality
+- Added lzlib-devel dependency for OpenSUSE
+
+* Tue Apr 12 2016 Igor Gnatenko <ignatenko@redhat.com> - 0.3.0-2
 - Cleanup spec
 - Make build out-of-tree
 - Sync with valgrind arches
 - Build documentation
 
-* Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 0.2.0-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+* Thu Sep 3 2015 Matej Chalk <mchalk@redhat.com> 0.3.0-1
+- Bumped minor version (deltarpm creation added)
 
-* Sun Jul 26 2015 Kevin Fenzi <kevin@scrye.com> 0.2.0-3
-- Rebuild for new librpm
+* Tue Aug 4 2015 Matej Chalk <mchalk@redhat.com> 0.2.1-1
+- Added openssl dependency
 
 * Fri Jul 24 2015 Matej Chalk <mchalk@redhat.com> 0.2.0-2
 - Fixed bug in test suite
