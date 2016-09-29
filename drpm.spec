@@ -1,7 +1,8 @@
 Name:           drpm
 Version:        0.3.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        A library for making, reading and applying deltarpm packages
+
 # the entire source code is LGPLv3+, except src/drpm_diff.c and src/drpm_search.c which are BSD
 License:        LGPLv3+ and BSD
 URL:            https://fedorahosted.org/%{name}
@@ -15,9 +16,6 @@ BuildRequires:  openssl-devel
 BuildRequires:  zlib-devel
 BuildRequires:  bzip2-devel
 BuildRequires:  xz-devel
-%if 0%{?suse_version}
-BuildRequires:  lzlib-devel
-%endif
 
 BuildRequires:  pkgconfig
 BuildRequires:  doxygen
@@ -44,11 +42,7 @@ mkdir build
 
 %build
 pushd build
-%if 0%{?suse_version}
-%cmake -DHAVE_LZLIB_DEVEL:BOOL=ON ..
-%else
 %cmake ..
-%endif
 %make_build
 make doc
 popd
@@ -68,16 +62,19 @@ popd
 %postun -p /sbin/ldconfig
 
 %files
-%{_libdir}/lib%{name}.so.*
 %license COPYING COPYING.LESSER LICENSE.BSD
+%{_libdir}/libdrpm.so.*
 
 %files devel
 %doc build/doc/html/
-%{_libdir}/lib%{name}.so
-%{_includedir}/%{name}.h
-%{_libdir}/pkgconfig/%{name}.pc
+%{_libdir}/libdrpm.so
+%{_includedir}/drpm.h
+%{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Thu Sep 29 2016 Pete Walter <pwalter@fedoraproject.org> - 0.3.0-4
+- Simplify spec file
+
 * Tue May 3 2016 Matej Chalk <mchalk@redhat.com> 0.3.0-3
 - Now contains makedeltarpm and applydeltarpm functionality
 - Added lzlib-devel dependency for OpenSUSE
