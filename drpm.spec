@@ -8,6 +8,10 @@ License:        LGPLv3+ and BSD
 URL:            https://fedorahosted.org/%{name}
 Source:         https://fedorahosted.org/released/%{name}/%{name}-%{version}.tar.bz2
 
+# add workaround for gcc7 on ppc64le temporary before it's fixed in gcc
+# https://bugzilla.redhat.com/show_bug.cgi?id=1420350
+Patch1:         drpm-0.3.0-workaround-ppc64le-gcc.patch
+
 BuildRequires:  cmake >= 2.8
 BuildRequires:  gcc
 
@@ -37,7 +41,7 @@ Requires:       %{name}%{?_isa} = %{version}-%{release}
 The drpm-devel package provides a C interface (drpm.h) for the drpm library.
 
 %prep
-%autosetup
+%autosetup -p1
 mkdir build
 
 %build
@@ -72,8 +76,8 @@ popd
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
-* Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.0-5
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
+* Tue Mar 28 2017 Than Ngo <than@redhat.com> - 0.3.0-5
+- added workaround for gcc7 bug on ppc64le temporary
 
 * Thu Sep 29 2016 Pete Walter <pwalter@fedoraproject.org> - 0.3.0-4
 - Simplify spec file
