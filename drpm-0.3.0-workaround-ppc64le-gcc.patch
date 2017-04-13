@@ -23,3 +23,17 @@ diff -up drpm-0.3.0/test/CMakeLists.txt.than drpm-0.3.0/test/CMakeLists.txt
  )
  
  target_link_libraries(drpm_api_tests ${DRPM_LINK_LIBRARIES} ${CMOCKA_LIBRARIES})
+@@ -52,13 +52,3 @@ if (BASH_PROGRAM)
+    )
+    set_tests_properties(drpm_cmp_files PROPERTIES DEPENDS drpm_api_tests)
+ endif()
+-
+-
+-if (VALGRIND_PROGRAM)
+-   add_test(
+-      NAME drpm_memcheck
+-      WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+-      COMMAND valgrind ${DRPM_TEST_ARGS_VALGRIND} ./drpm_api_tests
+-   )
+-endif()
+-
