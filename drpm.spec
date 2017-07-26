@@ -1,6 +1,6 @@
 Name:           drpm
 Version:        0.3.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        A library for making, reading and applying deltarpm packages
 
 # the entire source code is LGPLv3+, except src/drpm_diff.c and src/drpm_search.c which are BSD
@@ -76,6 +76,9 @@ popd
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Wed Jul 26 2017 Fedora Release Engineering <releng@fedoraproject.org> - 0.3.0-7
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Thu Apr 13 2017 Than Ngo <than@redhat.com> - 0.3.0-6
 - updated workaround patch
 
