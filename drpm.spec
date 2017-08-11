@@ -1,6 +1,6 @@
 Name:           drpm
 Version:        0.3.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        A library for making, reading and applying deltarpm packages
 
 # the entire source code is LGPLv3+, except src/drpm_diff.c and src/drpm_search.c which are BSD
@@ -76,6 +76,9 @@ popd
 %{_libdir}/pkgconfig/drpm.pc
 
 %changelog
+* Fri Aug 11 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.3.0-11
+- Rebuilt after RPM update (№ 3)
+
 * Thu Aug 10 2017 Igor Gnatenko <ignatenko@redhat.com> - 0.3.0-10
 - Rebuilt for RPM soname bump
 
